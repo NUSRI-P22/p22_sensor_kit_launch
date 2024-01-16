@@ -5,15 +5,15 @@
     <push-ros-namespace namespace="imu"/>
 
     <group>
-      <push-ros-namespace namespace="tamagawa"/>
-      <node pkg="tamagawa_imu_driver" name="tag_serial_driver" exec="tag_serial_driver" if="$(var launch_driver)">
+      <push-ros-namespace namespace="C_Board"/>
+      <node pkg="C_Board_imu_driver" name="C_Board_imu_driver" exec="C_Board_imu_driver" if="$(var launch_driver)">
         <remap from="imu/data_raw" to="imu_raw"/>
         <param name="port" value="/dev/imu"/>
-        <param name="imu_frame_id" value="tamagawa/imu_link"/>
+        <param name="imu_frame_id" value="C_Board/imu_link"/>
       </node>
     </group>
 
-    <arg name="imu_raw_name" default="tamagawa/imu_raw"/>
+    <arg name="imu_raw_name" default="C_Board/imu_raw"/>
     <arg name="imu_corrector_param_file" default="$(find-pkg-share individual_params)/config/$(var vehicle_id)/sample_sensor_kit/imu_corrector.param.yaml"/>
     <include file="$(find-pkg-share imu_corrector)/launch/imu_corrector.launch.xml">
       <arg name="input_topic" value="$(var imu_raw_name)"/>

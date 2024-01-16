@@ -1,6 +1,6 @@
 <launch>
   <arg name="launch_driver" default="true"/>
-  <arg name="gnss_receiver" default="ublox" description="ublox(default) or septentrio"/>
+  <arg name="gnss_receiver" default="G60" description="ublox(default), septentrio or G60"/>
 
   <group>
     <push-ros-namespace namespace="gnss"/>
@@ -8,7 +8,15 @@
     <!-- Switch topic name -->
     <let name="navsatfix_topic_name" value="ublox/nav_sat_fix" if="$(eval &quot;'$(var gnss_receiver)'=='ublox'&quot;)"/>
     <let name="navsatfix_topic_name" value="septentrio/nav_sat_fix" if="$(eval &quot;'$(var gnss_receiver)'=='septentrio'&quot;)"/>
+    <let name="navsatfix_topic_name" value="G60/nav_sat_fix" if="$(eval &quot;'$(var gnss_receiver)'=='G60'&quot;)"/>
     <let name="orientation_topic_name" value="/autoware_orientation"/>
+
+    <!-- G60 Driver -->
+    <group if="$(eval &quot;'$(var gnss_receiver)'=='G60'&quot;)">
+      <include file="$(find-pkg-share G60_gnss_driver)/launch/G60.launch.xml"/>
+    </group>
+        
+
 
     <!-- Ublox Driver -->
     <group if="$(eval &quot;'$(var gnss_receiver)'=='ublox'&quot;)">

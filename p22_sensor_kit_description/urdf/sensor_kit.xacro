@@ -37,7 +37,7 @@
 
     <!-- GNSS -->
     <xacro:imu_macro
-      name="GNSS"
+      name="gnss"
       parent="sensor_kit_base_link"
       namespace=""
       x="${calibration['sensor_kit_base_link']['GNSS_link']['x']}"
@@ -51,7 +51,7 @@
 
     <!-- IMU -->
     <xacro:imu_macro
-      name="IMU"
+      name="imu"
       parent="sensor_kit_base_link"
       namespace=""
       x="${calibration['sensor_kit_base_link']['IMU_link']['x']}"
