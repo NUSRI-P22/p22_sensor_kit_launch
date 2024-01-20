@@ -24,7 +24,7 @@
     <xacro:property name="calibration" value="${xacro.load_yaml('$(arg config_dir)/sensor_kit_calibration.yaml')}"/>
 
     <!-- Lidar -->
-    <xacro:VLS-128 parent="sensor_kit_base_link" name="Unitree_front" topic="/points_raw" hz="10" samples="220" gpu="$(arg gpu)">
+    <xacro:Unitree-L1 parent="sensor_kit_base_link" name="Unitree_front" topic="/points_raw" hz="10" samples="220" gpu="$(arg gpu)">
       <origin
         xyz="${calibration['sensor_kit_base_link']['Unitree_front_base_link']['x']}
              ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['y']}
@@ -33,7 +33,7 @@
              ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['pitch']}
              ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['yaw']}"
       />
-    </xacro:VLS-128>
+    </xacro:Unitree-L1>
 
     <!-- GNSS -->
     <xacro:imu_macro
