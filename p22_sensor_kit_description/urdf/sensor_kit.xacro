@@ -23,12 +23,12 @@
     <!-- Lidar -->
     <xacro:Unitree-L1 parent="sensor_kit_base_link" name="Unitree" topic="/points_raw" hz="10" samples="220" gpu="$(arg gpu)">
       <origin
-        xyz="${calibration['sensor_kit_base_link']['Unitree_front_base_link']['x']}
-             ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['y']}
-             ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['z']}"
-        rpy="${calibration['sensor_kit_base_link']['Unitree_front_base_link']['roll']}
-             ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['pitch']}
-             ${calibration['sensor_kit_base_link']['Unitree_front_base_link']['yaw']}"
+        xyz="${calibration['sensor_kit_base_link']['unitree_base_link']['x']}
+             ${calibration['sensor_kit_base_link']['unitree_base_link']['y']}
+             ${calibration['sensor_kit_base_link']['unitree_base_link']['z']}"
+        rpy="${calibration['sensor_kit_base_link']['unitree_base_link']['roll']}
+             ${calibration['sensor_kit_base_link']['unitree_base_link']['pitch']}
+             ${calibration['sensor_kit_base_link']['unitree_base_link']['yaw']}"
       />
     </xacro:Unitree-L1>
 

@@ -71,7 +71,9 @@ def launch_setup(context, *args, **kwargs):
         ComposableNode(
             package="unitree_lidar_ros2",
             name=sensor_model.lower() + "_driver_ros_wrapper_node",
+            type="UnitreeLidarSDKNode",
             remappings=[
+                ("/unilidar/cloud_out", "pointcloud_raw"),
                 ("aw_points", "pointcloud_raw"),
                 ("aw_points_ex", "pointcloud_raw_ex"),
             ],

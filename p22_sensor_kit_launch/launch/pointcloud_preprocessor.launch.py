@@ -38,6 +38,7 @@ def launch_setup(context, *args, **kwargs):
         parameters=[
             {
                 "input_topics": [
+                    "/unilidar/cloud_out",
                     "/sensing/lidar/front/pointcloud",
                     # "/sensing/lidar/top/pointcloud",
                     # "/sensing/lidar/left/pointcloud",
