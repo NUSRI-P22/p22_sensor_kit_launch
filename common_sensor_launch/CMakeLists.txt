@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(common_sensor_launch)
 
 find_package(ament_cmake_auto REQUIRED)
+find_package(unitree_lidar_ros2 REQUIRED)
 ament_auto_find_build_dependencies()
 
 if(BUILD_TESTING)

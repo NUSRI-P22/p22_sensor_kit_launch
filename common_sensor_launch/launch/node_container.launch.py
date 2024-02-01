@@ -62,35 +62,38 @@ def launch_setup(context, *args, **kwargs):
 
     # Model and make
     sensor_model = LaunchConfiguration("sensor_model").perform(context)
-    nebula_decoders_share_dir = get_package_share_directory("nebula_decoders")
-
     nodes = []
 
-    # Launch "unitree_lidar_ros2" if it's a ComposableNode
-    nodes.append(
-        ComposableNode(
-            package="unitree_lidar_ros2",
-            name=sensor_model.lower() + "_driver_ros_wrapper_node",
-            type="UnitreeLidarSDKNode",
-            remappings=[
-                ("/unilidar/cloud_out", "pointcloud_raw"),
-                ("aw_points", "pointcloud_raw"),
-                ("aw_points_ex", "pointcloud_raw_ex"),
-            ],
-            # extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-        )
-    )
+    # # Launch "unitree_lidar_ros2" if it's a ComposableNode
+    # nodes.append(
+    #     ComposableNode(
+    #         package="unitree_lidar_ros2",
+    #         name="unitree_lidar_ros2",
+    #         plugin="UnitreeLidarSDKNode",
+    #         remappings=[
+    #             ("/unilidar/cloud", "pointcloud_raw_ex"),
+    #         ],
+    #         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    #     )
+    # )
 
     cropbox_parameters = create_parameter_dict("input_frame", "output_frame")
     cropbox_parameters["negative"] = True
 
-    vehicle_info = get_vehicle_info(context)
-    cropbox_parameters["min_x"] = vehicle_info["min_longitudinal_offset"]
-    cropbox_parameters["max_x"] = vehicle_info["max_longitudinal_offset"]
-    cropbox_parameters["min_y"] = vehicle_info["min_lateral_offset"]
-    cropbox_parameters["max_y"] = vehicle_info["max_lateral_offset"]
-    cropbox_parameters["min_z"] = vehicle_info["min_height_offset"]
-    cropbox_parameters["max_z"] = vehicle_info["max_height_offset"]
+    # # vehicle_info = get_vehicle_info(context)
+    # # cropbox_parameters["min_x"] = vehicle_info["min_longitudinal_offset"]
+    # # cropbox_parameters["max_x"] = vehicle_info["max_longitudinal_offset"]
+    # # cropbox_parameters["min_y"] = vehicle_info["min_lateral_offset"]
+    # # cropbox_parameters["max_y"] = vehicle_info["max_lateral_offset"]
+    # # cropbox_parameters["min_z"] = vehicle_info["min_height_offset"]
+    # # cropbox_parameters["max_z"] = vehicle_info["max_height_offset"]
+    
+    cropbox_parameters["min_x"] = 0.0
+    cropbox_parameters["max_x"] = 0.0
+    cropbox_parameters["min_y"] = 0.0
+    cropbox_parameters["max_y"] = 0.0
+    cropbox_parameters["min_z"] = 0.0
+    cropbox_parameters["max_z"] = 0.0
 
     nodes.append(
         ComposableNode(
@@ -106,13 +109,20 @@ def launch_setup(context, *args, **kwargs):
         )
     )
 
-    mirror_info = get_vehicle_mirror_info(context)
-    cropbox_parameters["min_x"] = mirror_info["min_longitudinal_offset"]
-    cropbox_parameters["max_x"] = mirror_info["max_longitudinal_offset"]
-    cropbox_parameters["min_y"] = mirror_info["min_lateral_offset"]
-    cropbox_parameters["max_y"] = mirror_info["max_lateral_offset"]
-    cropbox_parameters["min_z"] = mirror_info["min_height_offset"]
-    cropbox_parameters["max_z"] = mirror_info["max_height_offset"]
+    # # mirror_info = get_vehicle_mirror_info(context)
+    # # cropbox_parameters["min_x"] = mirror_info["min_longitudinal_offset"]
+    # # cropbox_parameters["max_x"] = mirror_info["max_longitudinal_offset"]
+    # # cropbox_parameters["min_y"] = mirror_info["min_lateral_offset"]
+    # # cropbox_parameters["max_y"] = mirror_info["max_lateral_offset"]
+    # # cropbox_parameters["min_z"] = mirror_info["min_height_offset"]
+    # # cropbox_parameters["max_z"] = mirror_info["max_height_offset"]
+    
+    cropbox_parameters["min_x"] = 0.0
+    cropbox_parameters["max_x"] = 0.0
+    cropbox_parameters["min_y"] = 0.0
+    cropbox_parameters["max_y"] = 0.0
+    cropbox_parameters["min_z"] = 0.0
+    cropbox_parameters["max_z"] = 0.0
 
     nodes.append(
         ComposableNode(
@@ -211,13 +221,13 @@ def generate_launch_description():
     add_launch_arg("frame_id", "lidar", "frame id")
     add_launch_arg("input_frame", LaunchConfiguration("base_frame"), "use for cropbox")
     add_launch_arg("output_frame", LaunchConfiguration("base_frame"), "use for cropbox")
-    add_launch_arg(
-        "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"
-    )
+    # add_launch_arg(
+    #     "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"
+    # )
     add_launch_arg("use_multithread", "False", "use multithread")
     add_launch_arg("use_intra_process", "False", "use ROS 2 component container communication")
     add_launch_arg("use_pointcloud_container", "false")
-    add_launch_arg("container_name", "nebula_node_container")
+    add_launch_arg("container_name", "node_container")
 
     set_container_executable = SetLaunchConfiguration(
         "container_executable",

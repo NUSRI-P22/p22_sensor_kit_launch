@@ -38,11 +38,8 @@ def launch_setup(context, *args, **kwargs):
         parameters=[
             {
                 "input_topics": [
-                    "/unilidar/cloud_out",
-                    "/sensing/lidar/front/pointcloud",
-                    # "/sensing/lidar/top/pointcloud",
-                    # "/sensing/lidar/left/pointcloud",
-                    # "/sensing/lidar/right/pointcloud",
+                    "/lidar/unitree/pointcloud",
+                    "/lidar/unitree/pointcloud",
                 ],
                 "output_frame": LaunchConfiguration("base_frame"),
                 "input_twist_topic_type": "twist",
