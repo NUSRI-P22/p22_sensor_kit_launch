@@ -64,29 +64,42 @@ def launch_setup(context, *args, **kwargs):
     sensor_model = LaunchConfiguration("sensor_model").perform(context)
     nodes = []
 
-    # # Launch "unitree_lidar_ros2" if it's a ComposableNode
-    # nodes.append(
-    #     ComposableNode(
-    #         package="unitree_lidar_ros2",
-    #         name="unitree_lidar_ros2",
-    #         plugin="UnitreeLidarSDKNode",
-    #         remappings=[
-    #             ("/unilidar/cloud", "pointcloud_raw_ex"),
-    #         ],
-    #         extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-    #     )
-    # )
+    # Launch "unitree_lidar_ros2"
+    nodes.append(
+        ComposableNode(
+            package="unitree_lidar_ros2",
+            plugin="UnitreeLidarSDKNode",
+            name="unitree_lidar_ros2_node",
+            # remappings=[
+            #     ("/unilidar/cloud", "pointcloud_raw_ex"),
+            # ],
+            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+        )
+    )
+    
+    # Launch "unitree_lidar_ros2_covertor"
+    nodes.append(
+        ComposableNode(
+            package="unitree_lidar_ros2",
+            plugin="UnitreeLidarConvertor",
+            name="unitree_lidar_ros2_convertor",
+            remappings=[
+                ("/unilidar/cloud_out", "pointcloud_raw_ex"),
+            ],
+            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+        )
+    )
 
     cropbox_parameters = create_parameter_dict("input_frame", "output_frame")
     cropbox_parameters["negative"] = True
 
-    # # vehicle_info = get_vehicle_info(context)
-    # # cropbox_parameters["min_x"] = vehicle_info["min_longitudinal_offset"]
-    # # cropbox_parameters["max_x"] = vehicle_info["max_longitudinal_offset"]
-    # # cropbox_parameters["min_y"] = vehicle_info["min_lateral_offset"]
-    # # cropbox_parameters["max_y"] = vehicle_info["max_lateral_offset"]
-    # # cropbox_parameters["min_z"] = vehicle_info["min_height_offset"]
-    # # cropbox_parameters["max_z"] = vehicle_info["max_height_offset"]
+    # vehicle_info = get_vehicle_info(context)
+    # cropbox_parameters["min_x"] = vehicle_info["min_longitudinal_offset"]
+    # cropbox_parameters["max_x"] = vehicle_info["max_longitudinal_offset"]
+    # cropbox_parameters["min_y"] = vehicle_info["min_lateral_offset"]
+    # cropbox_parameters["max_y"] = vehicle_info["max_lateral_offset"]
+    # cropbox_parameters["min_z"] = vehicle_info["min_height_offset"]
+    # cropbox_parameters["max_z"] = vehicle_info["max_height_offset"]
     
     cropbox_parameters["min_x"] = 0.0
     cropbox_parameters["max_x"] = 0.0
@@ -109,13 +122,13 @@ def launch_setup(context, *args, **kwargs):
         )
     )
 
-    # # mirror_info = get_vehicle_mirror_info(context)
-    # # cropbox_parameters["min_x"] = mirror_info["min_longitudinal_offset"]
-    # # cropbox_parameters["max_x"] = mirror_info["max_longitudinal_offset"]
-    # # cropbox_parameters["min_y"] = mirror_info["min_lateral_offset"]
-    # # cropbox_parameters["max_y"] = mirror_info["max_lateral_offset"]
-    # # cropbox_parameters["min_z"] = mirror_info["min_height_offset"]
-    # # cropbox_parameters["max_z"] = mirror_info["max_height_offset"]
+    # mirror_info = get_vehicle_mirror_info(context)
+    # cropbox_parameters["min_x"] = mirror_info["min_longitudinal_offset"]
+    # cropbox_parameters["max_x"] = mirror_info["max_longitudinal_offset"]
+    # cropbox_parameters["min_y"] = mirror_info["min_lateral_offset"]
+    # cropbox_parameters["max_y"] = mirror_info["max_lateral_offset"]
+    # cropbox_parameters["min_z"] = mirror_info["min_height_offset"]
+    # cropbox_parameters["max_z"] = mirror_info["max_height_offset"]
     
     cropbox_parameters["min_x"] = 0.0
     cropbox_parameters["max_x"] = 0.0
@@ -207,23 +220,23 @@ def generate_launch_description():
     add_launch_arg("setup_sensor", "True", "configure sensor")
     # add_launch_arg("sensor_ip", "192.168.1.201", "device ip address")
     # add_launch_arg("host_ip", "255.255.255.255", "host ip address")
-    add_launch_arg("scan_phase", "0.0")
+    # add_launch_arg("scan_phase", "0.0")
     add_launch_arg("base_frame", "base_link", "base frame id")
-    add_launch_arg("min_range", "0.3", "minimum view range for Velodyne sensors")
-    add_launch_arg("max_range", "300.0", "maximum view range for Velodyne sensors")
+    add_launch_arg("min_range", "0.05", "minimum view range for Lidar")
+    add_launch_arg("max_range", "70.0", "maximum view range for Lidar")
     add_launch_arg("cloud_min_angle", "0", "minimum view angle setting on device")
     add_launch_arg("cloud_max_angle", "360", "maximum view angle setting on device")
-    add_launch_arg("data_port", "2368", "device data port number")
-    add_launch_arg("gnss_port", "2380", "device gnss port number")
-    add_launch_arg("packet_mtu_size", "1500", "packet mtu size")
-    add_launch_arg("rotation_speed", "600", "rotational frequency")
-    add_launch_arg("dual_return_distance_threshold", "0.1", "dual return distance threshold")
+    # add_launch_arg("data_port", "2368", "device data port number")
+    # add_launch_arg("gnss_port", "2380", "device gnss port number")
+    # add_launch_arg("packet_mtu_size", "1500", "packet mtu size")
+    # add_launch_arg("rotation_speed", "600", "rotational frequency")
+    # add_launch_arg("dual_return_distance_threshold", "0.1", "dual return distance threshold")
     add_launch_arg("frame_id", "lidar", "frame id")
     add_launch_arg("input_frame", LaunchConfiguration("base_frame"), "use for cropbox")
     add_launch_arg("output_frame", LaunchConfiguration("base_frame"), "use for cropbox")
-    # add_launch_arg(
-    #     "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"
-    # )
+    add_launch_arg(
+        "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"
+    )
     add_launch_arg("use_multithread", "False", "use multithread")
     add_launch_arg("use_intra_process", "False", "use ROS 2 component container communication")
     add_launch_arg("use_pointcloud_container", "false")
