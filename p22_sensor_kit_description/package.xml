@@ -5,7 +5,7 @@
   <version>0.1.0</version>
   <description>The p22_sensor_kit_description package</description>
   <maintainer email="1982917081@qq.com">Longbin Tang</maintainer>
-  <maintainer email="XX@XX.XX">Jiaxin Guo</maintainer>
+  <maintainer email="1316224681@qq.com">Jiaxin Guo</maintainer>
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>

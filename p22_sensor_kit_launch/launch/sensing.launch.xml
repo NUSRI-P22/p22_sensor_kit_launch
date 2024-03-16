@@ -14,10 +14,10 @@
       <arg name="pointcloud_container_name" value="$(var pointcloud_container_name)"/>
     </include>
 
-    <!-- IMU Driver -->
-    <!-- <include file="$(find-pkg-share p22_sensor_kit_launch)/launch/imu.launch.xml">
+    <!-- odom Driver -->
+    <include file="$(find-pkg-share p22_sensor_kit_launch)/launch/gyro_odometry.launch.xml">
       <arg name="launch_driver" value="$(var launch_driver)"/>
-    </include> -->
+    </include>
 
     <!-- GNSS Driver -->
     <!-- <include file="$(find-pkg-share p22_sensor_kit_launch)/launch/gnss.launch.xml">

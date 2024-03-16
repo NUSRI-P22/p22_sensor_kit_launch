@@ -32,31 +32,19 @@
       />
     </xacro:Unitree-L1>
 
-    <!-- GNSS -->
-    <xacro:imu_macro
-      name="gnss"
-      parent="sensor_kit_base_link"
-      namespace=""
-      x="${calibration['sensor_kit_base_link']['GNSS_link']['x']}"
-      y="${calibration['sensor_kit_base_link']['GNSS_link']['y']}"
-      z="${calibration['sensor_kit_base_link']['GNSS_link']['z']}"
-      roll="${calibration['sensor_kit_base_link']['GNSS_link']['roll']}"
-      pitch="${calibration['sensor_kit_base_link']['GNSS_link']['pitch']}"
-      yaw="${calibration['sensor_kit_base_link']['GNSS_link']['yaw']}"
-      fps="100"
-    />
 
-    <!-- IMU -->
-    <xacro:imu_macro
-      name="imu"
+
+    <!-- odom -->
+    <xacro:odom_
+      name="odom"
       parent="sensor_kit_base_link"
       namespace=""
-      x="${calibration['sensor_kit_base_link']['IMU_link']['x']}"
-      y="${calibration['sensor_kit_base_link']['IMU_link']['y']}"
-      z="${calibration['sensor_kit_base_link']['IMU_link']['z']}"
-      roll="${calibration['sensor_kit_base_link']['IMU_link']['roll']}"
-      pitch="${calibration['sensor_kit_base_link']['IMU_link']['pitch']}"
-      yaw="${calibration['sensor_kit_base_link']['IMU_link']['yaw']}"
+      x="${calibration['sensor_kit_base_link']['odom_link']['x']}"
+      y="${calibration['sensor_kit_base_link']['odom_link']['y']}"
+      z="${calibration['sensor_kit_base_link']['odom_link']['z']}"
+      roll="${calibration['sensor_kit_base_link']['odom_link']['roll']}"
+      pitch="${calibration['sensor_kit_base_link']['odom_link']['pitch']}"
+      yaw="${calibration['sensor_kit_base_link']['odom_link']['yaw']}"
       fps="100"
     />
   </xacro:macro>
