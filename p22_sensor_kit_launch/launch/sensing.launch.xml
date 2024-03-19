@@ -19,6 +19,11 @@
       <arg name="launch_driver" value="$(var launch_driver)"/>
     </include>
 
+    <!-- radar Driver -->
+    <include file="$(find-pkg-share p22_sensor_kit_launch)/launch/radar.launch.xml">
+      <arg name="launch_driver" value="$(var launch_driver)"/>
+    </include>
+
     <!-- GNSS Driver -->
     <!-- <include file="$(find-pkg-share p22_sensor_kit_launch)/launch/gnss.launch.xml">
       <arg name="launch_driver" value="$(var launch_driver)"/>
