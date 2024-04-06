@@ -37,8 +37,8 @@ def get_vehicle_info(context):
     p = {}
     p["vehicle_length"] = gp["front_overhang"] + gp["wheel_base"] + gp["rear_overhang"]
     p["vehicle_width"] = gp["wheel_tread"] + gp["left_overhang"] + gp["right_overhang"]
-    p["min_longitudinal_offset"] = -gp["rear_overhang"]
-    p["max_longitudinal_offset"] = gp["front_overhang"] + gp["wheel_base"]
+    p["min_longitudinal_offset"] = -(gp["rear_overhang"] + gp["wheel_base"] / 2.0)
+    p["max_longitudinal_offset"] = gp["front_overhang"] + gp["wheel_base"] / 2.0
     p["min_lateral_offset"] = -(gp["wheel_tread"] / 2.0 + gp["right_overhang"])
     p["max_lateral_offset"] = gp["wheel_tread"] / 2.0 + gp["left_overhang"]
     p["min_height_offset"] = 0.0
@@ -64,30 +64,15 @@ def launch_setup(context, *args, **kwargs):
     nodes = []
 
     # Launch "unitree_lidar_ros2"
-    nodes.append(
-        ComposableNode(
-            package="unitree_lidar_ros2",
-            plugin="UnitreeLidarSDKNode",
-            name="unitree_lidar_ros2_node",
-            # remappings=[
-            #     ("/unilidar/cloud", "pointcloud_raw_ex"),
-            # ],
-            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+    if LaunchConfiguration("launch_driver") == "True":
+        nodes.append(
+            ComposableNode(
+                package="unitree_lidar_ros2",
+                plugin="UnitreeLidarSDKNode",
+                name="unitree_lidar_ros2_node",
+                extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
+            )
         )
-    )
-    
-    # Launch "unitree_lidar_ros2_covertor"
-    nodes.append(
-        ComposableNode(
-            package="unitree_lidar_ros2",
-            plugin="UnitreeLidarConvertor",
-            name="unitree_lidar_ros2_convertor",
-            remappings=[
-                ("/unilidar/cloud_out", "pointcloud_raw_ex"),
-            ],
-            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-        )
-    )
 
     cropbox_parameters = create_parameter_dict("input_frame", "output_frame")
     cropbox_parameters["negative"] = True
@@ -99,13 +84,6 @@ def launch_setup(context, *args, **kwargs):
     cropbox_parameters["max_y"] = vehicle_info["max_lateral_offset"]
     cropbox_parameters["min_z"] = vehicle_info["min_height_offset"]
     cropbox_parameters["max_z"] = vehicle_info["max_height_offset"]
-    
-    # cropbox_parameters["min_x"] = 0.0
-    # cropbox_parameters["max_x"] = 0.0
-    # cropbox_parameters["min_y"] = 0.0
-    # cropbox_parameters["max_y"] = 0.0
-    # cropbox_parameters["min_z"] = 0.0
-    # cropbox_parameters["max_z"] = 0.0
 
     nodes.append(
         ComposableNode(
@@ -113,37 +91,8 @@ def launch_setup(context, *args, **kwargs):
             plugin="pointcloud_preprocessor::CropBoxFilterComponent",
             name="crop_box_filter_self",
             remappings=[
-                ("input", "pointcloud_raw_ex"),
+                ("input", "/unilidar/cloud"),
                 ("output", "self_cropped/pointcloud_ex"),
-            ],
-            parameters=[cropbox_parameters],
-            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-        )
-    )
-
-    mirror_info = get_vehicle_mirror_info(context)
-    cropbox_parameters["min_x"] = mirror_info["min_longitudinal_offset"]
-    cropbox_parameters["max_x"] = mirror_info["max_longitudinal_offset"]
-    cropbox_parameters["min_y"] = mirror_info["min_lateral_offset"]
-    cropbox_parameters["max_y"] = mirror_info["max_lateral_offset"]
-    cropbox_parameters["min_z"] = mirror_info["min_height_offset"]
-    cropbox_parameters["max_z"] = mirror_info["max_height_offset"]
-    
-    # cropbox_parameters["min_x"] = 0.0
-    # cropbox_parameters["max_x"] = 0.0
-    # cropbox_parameters["min_y"] = 0.0
-    # cropbox_parameters["max_y"] = 0.0
-    # cropbox_parameters["min_z"] = 0.0
-    # cropbox_parameters["max_z"] = 0.0
-
-    nodes.append(
-        ComposableNode(
-            package="pointcloud_preprocessor",
-            plugin="pointcloud_preprocessor::CropBoxFilterComponent",
-            name="crop_box_filter_mirror",
-            remappings=[
-                ("input", "self_cropped/pointcloud_ex"),
-                ("output", "mirror_cropped/pointcloud_ex"),
             ],
             parameters=[cropbox_parameters],
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
@@ -158,21 +107,8 @@ def launch_setup(context, *args, **kwargs):
             remappings=[
                 ("~/input/twist", "/sensing/vehicle_velocity_converter/twist_with_covariance"),
                 ("~/input/imu", "/sensing/imu/imu_data"),
-                ("~/input/pointcloud", "mirror_cropped/pointcloud_ex"),
-                ("~/output/pointcloud", "rectified/pointcloud_ex"),
-            ],
-            extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
-        )
-    )
-
-    nodes.append(
-        ComposableNode(
-            package="pointcloud_preprocessor",
-            plugin="pointcloud_preprocessor::RingOutlierFilterComponent",
-            name="ring_outlier_filter",
-            remappings=[
-                ("input", "rectified/pointcloud_ex"),
-                ("output", "pointcloud"),
+                ("~/input/pointcloud", "self_cropped/pointcloud_ex"),
+                ("~/output/pointcloud", "pointcloud"),
             ],
             extra_arguments=[{"use_intra_process_comms": LaunchConfiguration("use_intra_process")}],
         )
@@ -213,10 +149,10 @@ def generate_launch_description():
             DeclareLaunchArgument(name, default_value=default_value, description=description)
         )
 
-    add_launch_arg("launch_driver", "True", "do launch driver") # TODO
+    add_launch_arg("launch_driver", "True", "do launch driver")
     add_launch_arg("base_frame", "base_link", "base frame id")
     add_launch_arg("frame_id", "unilidar_lidar", "frame id")
-    add_launch_arg("input_frame", LaunchConfiguration("base_frame"), "use for cropbox")
+    add_launch_arg("input_frame", LaunchConfiguration("frame_id"), "use for cropbox")
     add_launch_arg("output_frame", LaunchConfiguration("base_frame"), "use for cropbox")
     add_launch_arg(
         "vehicle_mirror_param_file", description="path to the file of vehicle mirror position yaml"

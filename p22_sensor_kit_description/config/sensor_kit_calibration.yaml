@@ -1,17 +1,10 @@
 sensor_kit:
   unilidar_lidar: # Unitree L1 Lidar
-    x: 0.0
+    x: 0.227
     y: 0.0
-    z: 0.0
-    roll: 0.0
-    pitch: 0.0
-    yaw: 0.0
-  unilidar_imu: ## Unitree L1 Lidar IMU
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    roll: 0.0
-    pitch: 0.0
+    z: 0.230
+    roll: 3.141593
+    pitch: -1.570796
     yaw: 0.0
   GNSS_link: #GNSS
     x: 0.0
