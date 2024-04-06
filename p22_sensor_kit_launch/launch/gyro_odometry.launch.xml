@@ -1,7 +1,7 @@
 <launch>
   <arg name="launch_driver" default="true"/>
   <group>  
-    <node pkg="gyro_odometry" name="gyro_odometry" exec="gyro_odometry">   
+    <node pkg="gyro_odometry" name="gyro_odometry" exec="gyro_odometry" if="$(var launch_driver)">   
     </node>
   </group>
 </launch>
