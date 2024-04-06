@@ -1,7 +1,7 @@
 <launch>
   <arg name="launch_driver" default="true"/>
   <group>  
-    <node pkg="p22_radar" name="p22_radar" exec="p22_radar" if="$(var launch_driver)">   
+    <node pkg="p22_radar" name="p22_radar" exec="p22_radar">   
     </node>
   </group>
 </launch>
